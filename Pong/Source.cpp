@@ -45,21 +45,31 @@ int main(int args, char *argv[])
 	ball.posX = screen.width / 2;
 	ball.posY = screen.height / 2;
 	bool gameMenuOn = true;
+	int scoreP1 = 0;
+	int scoreP2 = 0;
 	do{
 		while (gameMenuOn&&!slShouldClose() && !slGetKey(SL_KEY_ESCAPE))
 		{
-			slCircleFill(slGetMouseX(), slGetMouseY(),cursor.radius-10,cursor.resolution);
-			slRectangleFill(screen.width/2,screen.height/2-100,play.width,play.height);
-			slRectangleFill(screen.width / 2, screen.height / 2 - 200, exit.width, exit.height);
+			if (slGetKey(SL_KEY_ENTER))
+			{
+				gameMenuOn = false;
+			}
+			slText(screen.width/2, screen.height/2+100, "Pong");
+			slText(screen.width/2, screen.height/2-200, "Press [Enter] to play");
+			slText(screen.width/2, screen.height/2-240, "Press [Esc] to Exit");
 			slRender();
 		}
 
 		ball.posX += ball.speedX;
 		ball.posY += ball.speedY;
-		if (ball.posY <= screen.width)
-		{
-
+		if (ball.posY+ball.radius >= screen.height || ball.posY+ball.radius<=0){
+			ball.speedY = -ball.speedY;
 		}
+		if (ball.posX+ball.radius >= screen.width)
+		{
+			scoreP1++;
+		}
+		slText(screen.width / 2, screen.height / 2 + 100, "P1:"); 
 		slCircleFill(ball.posX, ball.posY, ball.radius, ball.resolution);
 		slRectangleFill(player1.posX, player1.posY, player1.width, player1.height);
 		slRectangleFill(player2.posX, player2.posY, player2.width, player2.height);
