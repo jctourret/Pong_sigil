@@ -19,11 +19,19 @@ struct Screen
 	int height=600;
 	int width=800;
 };
+struct menuRect
+{
+	double width=100;
+	double height=30;
+};
 
 Player player1;
 Player player2;
 Ball ball;
+Ball cursor;
 Screen screen;
+menuRect play;
+menuRect exit;
 
 int main(int args, char *argv[])
 {
@@ -36,22 +44,27 @@ int main(int args, char *argv[])
 	player2.posY=screen.height-(screen.height/2);
 	ball.posX = screen.width / 2;
 	ball.posY = screen.height / 2;
+	bool gameMenuOn = true;
+	do{
+		while (gameMenuOn&&!slShouldClose() && !slGetKey(SL_KEY_ESCAPE))
+		{
+			slCircleFill(slGetMouseX(), slGetMouseY(),cursor.radius-10,cursor.resolution);
+			slRectangleFill(screen.width/2,screen.height/2-100,play.width,play.height);
+			slRectangleFill(screen.width / 2, screen.height / 2 - 200, exit.width, exit.height);
+			slRender();
+		}
 
-	while (!slShouldClose() && !slGetKey(SL_KEY_ESCAPE))
-	{
 		ball.posX += ball.speedX;
 		ball.posY += ball.speedY;
-		if (ball.posY<=screen.width)
+		if (ball.posY <= screen.width)
 		{
 
 		}
-
-
-		slCircleFill(ball.posX,ball.posY,ball.radius, ball.resolution);
+		slCircleFill(ball.posX, ball.posY, ball.radius, ball.resolution);
 		slRectangleFill(player1.posX, player1.posY, player1.width, player1.height);
 		slRectangleFill(player2.posX, player2.posY, player2.width, player2.height);
 		slRender();// draw everything
-	}
+	} while (!slShouldClose() && !slGetKey(SL_KEY_ESCAPE));
 	slClose();// close the window and shut down SIGIL
 	return 0;
 }
